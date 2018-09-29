@@ -1,0 +1,32 @@
+services:
+    1. Doctors
+        -> Requirmnets
+            - CRUD
+            - Auth
+            - Set time table
+            - view his appointments
+            - View Pationts
+
+        -> Tools
+            - Node Express
+            - Mongo DB
+
+    2. Patients
+        -> Requirments
+            - CRUD
+            - Auth
+            - View Doctors
+            - view available appointments
+            - book appointment
+
+        -> Tools
+            - Python
+            - Mongo DB
+
+    3. Appointments
+        -> Requirments
+            - CRUD
+
+        -> Tools
+            - Node Express
+            - Mongo DB

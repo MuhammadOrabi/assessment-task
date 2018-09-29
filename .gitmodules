@@ -1,0 +1,6 @@
+[submodule "patients"]
+	path = patients
+	url = git@github.com:MuhammadOrabi/assesment-task-patients.git
+[submodule "doctors"]
+	path = doctors
+	url = git@github.com:MuhammadOrabi/assesment-task-doctors.git
