@@ -4,3 +4,6 @@
 [submodule "doctors"]
 	path = doctors
 	url = git@github.com:MuhammadOrabi/assesment-task-doctors.git
+[submodule "appointments"]
+	path = appointments
+	url = git@github.com:MuhammadOrabi/assessment-task-appointments.git
