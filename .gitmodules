@@ -7,3 +7,6 @@
 [submodule "appointments"]
 	path = appointments
 	url = git@github.com:MuhammadOrabi/assessment-task-appointments.git
+[submodule "front"]
+	path = front
+	url = git@github.com:MuhammadOrabi/assesment-task-front.git
