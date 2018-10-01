@@ -48,7 +48,7 @@ services:
     build: front/
     command: yarn dev
     volumes:
-      - .:/usr/app/
+      - ./front/:/usr/app/
       - /usr/app/node_modules
     ports:
       - "80:8000"
