@@ -46,7 +46,7 @@ services:
 
   web:
     build: front/
-    command: npm run dev
+    command: yarn dev
     volumes:
       - .:/usr/app/
       - /usr/app/node_modules
@@ -65,7 +65,7 @@ services:
     environment:
       POSTGRES_PASSWORD: secret
     volumes:
-      - ./data:/var/lib/postgresql/data
+      - ./data-pgsql:/var/lib/postgresql/data
 
   mongodb:
     image: mongo
@@ -74,7 +74,7 @@ services:
     environment: 
       - MONGO_DATA_DIR=/data/db
     volumes: 
-      - ./data/db:/data/db
+      - ./data-mongo/db:/data/db
     command: mongod --smallfiles
 
   adminer:
