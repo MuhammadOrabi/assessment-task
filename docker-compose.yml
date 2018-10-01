@@ -44,6 +44,19 @@ services:
       - SECRET=NPH2xmMIKI78gsIZ/BPCCpy6u6MnLbFhT4Oj1S/zky0=
       - DATABASE_URL=mongodb://mongodb:27017/appointments
 
+  web:
+    build: front/
+    command: npm run dev
+    volumes:
+      - .:/usr/app/
+      - /usr/app/node_modules
+    ports:
+      - "80:8000"
+    depends_on:
+      - doctors
+      - patients
+      - appointments
+
   pgsql:
     image: postgres
     restart: always
