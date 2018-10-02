@@ -52,6 +52,10 @@ services:
       - /usr/app/node_modules
     ports:
       - "80:8000"
+    environment:
+      - PATIENTS_API=http://patients:5000/api/patients/
+      - DOCTORS_API=http://doctors:3000/api/doctors
+      - APPOINTMENTS_API=http://appointments:3001/api/appointments/
     depends_on:
       - doctors
       - patients
