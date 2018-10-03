@@ -15,7 +15,7 @@ services:
       - DATABASE_TEST_URL=postgres://postgres:secret@pgsql:5432/patients_test
     depends_on:
       - pgsql
-  
+
   doctors:
     build: doctors/
     command: npm run dev
@@ -26,9 +26,10 @@ services:
       - "3000:3000"
     depends_on:
       - mongodb
-    environment: 
+    environment:
       - SECRET=NPH2xmMIKI78gsIZ/BPCCpy6u6MnLbFhT4Oj1S/zky0=
       - DATABASE_URL=mongodb://mongodb:27017/doctors
+      - APPOINTMENTS_API=http://appointments:3001/api/appointments/
 
   appointments:
     build: appointments/
@@ -40,7 +41,7 @@ services:
     depends_on:
       - mongodb
     environment:
-      - PORT=3001 
+      - PORT=3001
       - SECRET=NPH2xmMIKI78gsIZ/BPCCpy6u6MnLbFhT4Oj1S/zky0=
       - DATABASE_URL=mongodb://mongodb:27017/appointments
 
