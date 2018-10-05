@@ -4,8 +4,8 @@
 ## Run
 ## Main
     - `git clone git@github.com:MuhammadOrabi/assessment-task.git assessment-task`
-    - `git submodule update --init`
     - `cd assessment-task`
+    - `git submodule update --init`
     - `docker-compose up --build -d`
 
 ## Patients databse config
