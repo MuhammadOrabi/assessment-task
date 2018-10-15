@@ -21,12 +21,12 @@ services:
 
         -> Tools
             - Python
-            - Mongo DB
+            - Postgres
 
     3. Appointments
         -> Requirments
             - CRUD
 
         -> Tools
-            - Node Express
+            - Golang
             - Mongo DB
