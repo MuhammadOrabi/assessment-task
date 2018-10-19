@@ -20,3 +20,6 @@
 
 ## Doctors
     docker-compose exec doctors npm test
+
+## Patients
+    docker-compose exec patients pytest --tb=short -p no:logging
