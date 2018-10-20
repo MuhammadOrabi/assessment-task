@@ -1,90 +1,112 @@
-version: '2'
+version: '3.2'
+
 services:
-  patients:
-    build: patients/
-    command: python run.py
-    volumes:
-      - ./patients/:/usr/app/
-    ports:
-      - 5000:5000
-    environment: 
-      - FLASK_ENV=development
-      - FLASK_APP=run.py
-      - SECRET=NPH2xmMIKI78gsIZ/BPCCpy6u6MnLbFhT4Oj1S/zky0=
-      - DATABASE_URI=postgresql://postgres:secret@pgsql:5432/patients
-      - DATABASE_TEST_URL=postgresql://postgres:secret@pgsql:5432/patients_test
-    depends_on:
-      - pgsql
+    patients:
+        build: patients/
+        command: python run.py
+        volumes:
+            - ./patients/:/usr/app/
+        ports:
+            - 5000:5000
+        environment: 
+            - FLASK_ENV=development
+            - FLASK_APP=run.py
+            - SECRET=NPH2xmMIKI78gsIZ/BPCCpy6u6MnLbFhT4Oj1S/zky0=
+            - DATABASE_URI=postgresql://postgres:secret@pgsql:5432/patients
+            - DATABASE_TEST_URL=postgresql://postgres:secret@pgsql:5432/patients_test
+        depends_on:
+            - pgsql
+            - rabbit1
 
-  doctors:
-    build: doctors/
-    command: npm run dev
-    volumes:
-      - ./doctors/:/usr/app/
-      - /usr/app/node_modules
-    ports:
-      - "3000:3000"
-    depends_on:
-      - mongodb
-    environment:
-      - SECRET=NPH2xmMIKI78gsIZ/BPCCpy6u6MnLbFhT4Oj1S/zky0=
-      - DATABASE_URL=mongodb://mongodb:27017/doctors
-      - APPOINTMENTS_API=http://appointments:3001/api/appointments/
+    doctors:
+        build: doctors/
+        command: npm run dev
+        volumes:
+            - ./doctors/:/usr/app/
+            - /usr/app/node_modules
+        ports:
+            - "3000:3000"
+        depends_on:
+            - mongodb
+            - rabbit1
+        environment:
+            - SECRET=NPH2xmMIKI78gsIZ/BPCCpy6u6MnLbFhT4Oj1S/zky0=
+            - DATABASE_URL=mongodb://mongodb:27017/doctors
+            - APPOINTMENTS_API=http://appointments:3001/api/appointments/
 
-  appointments:
-    build: appointments/
-    command: go run main.go
-    volumes:
-      - ./appointments/:/go/src/app
-    ports:
-      - "3001:3001"
-    depends_on:
-      - mongodb
-    environment:
-      - PORT=3001
-      - SECRET=NPH2xmMIKI78gsIZ/BPCCpy6u6MnLbFhT4Oj1S/zky0=
-      - DATABASE_URL=mongodb://mongodb:27017/appointments
+    appointments:
+        build: appointments/
+        command: go run main.go
+        volumes:
+          - ./appointments/:/go/src/app
+        ports:
+            - "3001:3001"
+        depends_on:
+            - mongodb
+            - rabbit1
+        environment:
+            - PORT=3001
+            - SECRET=NPH2xmMIKI78gsIZ/BPCCpy6u6MnLbFhT4Oj1S/zky0=
+            - DATABASE_URL=mongodb://mongodb:27017/appointments
 
-  web:
-    build: front/
-    command: yarn dev
-    volumes:
-      - ./front/:/usr/app/
-      - /usr/app/node_modules
-    ports:
-      - "80:80"
-    environment:
-      - VUE_APP_PATIENTS_API=http://patients:5000/api/patients/
-      - VUE_APP_DOCTORS_API=http://doctors:3000/api/doctors
-      - VUE_APP_APPOINTMENTS_API=http://appointments:3001/api/appointments/
-    links:
-      - doctors
-      - patients
-      - appointments
+    web:
+        build: front/
+        command: yarn dev
+        volumes:
+            - ./front/:/usr/app/
+            - /usr/app/node_modules
+        ports:
+          - "80:80"
+        environment:
+            - VUE_APP_PATIENTS_API=http://patients:5000/api/patients/
+            - VUE_APP_DOCTORS_API=http://doctors:3000/api/doctors
+            - VUE_APP_APPOINTMENTS_API=http://appointments:3001/api/appointments/
+        depends_on:
+            - doctors
+            - patients
+            - appointments
+            - rabbit1
 
-  pgsql:
-    image: postgres
-    restart: always
-    ports: 
-      - 5432:5432
-    environment:
-      POSTGRES_PASSWORD: secret
-    volumes:
-      - ./data-pgsql:/var/lib/postgresql/data
+    pgsql:
+        image: postgres
+        restart: always
+        ports: 
+          - 5432:5432
+        environment:
+            POSTGRES_PASSWORD: secret
+        volumes:
+            - ./data-pgsql:/var/lib/postgresql/data
 
-  mongodb:
-    image: mongo
-    ports:
-      - "27017:27017"
-    environment: 
-      - MONGO_DATA_DIR=/data/db
-    volumes: 
-      - ./data-mongo/db:/data/db
-    command: mongod --smallfiles
+    mongodb:
+        image: mongo
+        ports:
+            - "27017:27017"
+        environment: 
+            - MONGO_DATA_DIR=/data/db
+        volumes: 
+        - ./data-mongo/db:/data/db
+        command: mongod --smallfiles
 
-  adminer:
-    image: adminer
-    restart: always
-    ports:
-      - 8080:8080
-  
+    adminer:
+        image: adminer
+        restart: always
+        ports:
+        - 8080:8080
+    
+    rabbit1:
+        image: rabbitmq:3-management
+        hostname: "rabbit1"
+        environment:
+            RABBITMQ_ERLANG_COOKIE: "SWQOKODSQALRPCLNMEQG"
+            RABBITMQ_DEFAULT_USER: "rabbitmq"
+            RABBITMQ_DEFAULT_PASS: "rabbitmq"
+        RABBITMQ_DEFAULT_VHOST: "/"
+        ports:
+            - "15672:15672"
+            - "5672:5672"
+        labels:
+        volumes:
+            - ./rabbitmq/enabled_plugins:/etc/rabbitmq/enabled_plugins
+            # - ./rabbitmq/rabbitmq.config:/etc/rabbitmq/rabbitmq.config:ro
+            #- ./rabbitmq/autocluster-0.4.1.ez:/usr/lib/rabbitmq/lib/rabbitmq_server-3.5.5/plugins/autocluster-0.4.1.ez
+        
