@@ -1,4 +1,4 @@
-version: '3.2'
+version: '2'
 
 services:
     patients:
@@ -58,13 +58,23 @@ services:
         ports:
           - "80:80"
         environment:
-            - VUE_APP_PATIENTS_API=http://patients:5000/api/patients/
-            - VUE_APP_DOCTORS_API=http://doctors:3000/api/doctors
-            - VUE_APP_APPOINTMENTS_API=http://appointments:3001/api/appointments/
+            VUE_APP_PATIENTS_API: 'http://patients:5000/api/patients/'
+            VUE_APP_DOCTORS_API: 'http://doctors:3000/api/doctors'
+            VUE_APP_APPOINTMENTS_API: 'http://appointments:3001/api/appointments/'
         depends_on:
-            - doctors
-            - patients
-            - appointments
+            - events
+
+    events:
+        build: events/
+        command: yarn dev
+        volumes:
+            - ./events/:/usr/app/
+            - /usr/app/node_modules
+        ports:
+          - 8888:8888
+        environment:
+            PORT: 8888
+        depends_on:
             - rabbit1
 
     pgsql:
