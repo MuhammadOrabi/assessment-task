@@ -10,3 +10,6 @@
 [submodule "front"]
 	path = front
 	url = git@github.com:MuhammadOrabi/assesment-task-front.git
+[submodule "events"]
+	path = events
+	url = git@github.com:MuhammadOrabi/assessment-task-envents.git
