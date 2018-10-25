@@ -1,4 +1,4 @@
-version: '2'
+version: '2.1'
 
 services:
     patients:
@@ -28,6 +28,8 @@ services:
             - "3000:3000"
         depends_on:
             - mongodb
+            - rabbit1
+        links:
             - rabbit1
         environment:
             - SECRET=NPH2xmMIKI78gsIZ/BPCCpy6u6MnLbFhT4Oj1S/zky0=
@@ -62,6 +64,10 @@ services:
             VUE_APP_DOCTORS_API: 'http://doctors:3000/api/doctors'
             VUE_APP_APPOINTMENTS_API: 'http://appointments:3001/api/appointments/'
             PORT: 80
+        depends_on:
+            - rabbit1
+        links:
+            - rabbit1
 
     pgsql:
         image: postgres
@@ -102,4 +108,3 @@ services:
             - "5672:5672"
         volumes:
             - ./rabbitmq_enabled_plugins:/etc/rabbitmq/enabled_plugins
-        
