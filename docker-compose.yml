@@ -3,20 +3,21 @@ version: '2.1'
 services:
     patients:
         build: patients/
-        command: python run.py
+        command: npm run dev
         volumes:
-            - ./patients/:/usr/app/
+            - ./doctors/:/usr/app/
+            - /usr/app/node_modules
         ports:
-            - 5000:5000
-        environment: 
-            - FLASK_ENV=development
-            - FLASK_APP=run.py
-            - SECRET=NPH2xmMIKI78gsIZ/BPCCpy6u6MnLbFhT4Oj1S/zky0=
-            - DATABASE_URI=postgresql://postgres:secret@pgsql:5432/patients
-            - DATABASE_TEST_URL=postgresql://postgres:secret@pgsql:5432/patients_test
+            - "5000:5000"
         depends_on:
-            - pgsql
+            - mongodb
             - rabbit1
+        links:
+            - rabbit1
+        environment:
+            - PORT=5000
+            - SECRET=NPH2xmMIKI78gsIZ/BPCCpy6u6MnLbFhT4Oj1S/zky0=
+            - DATABASE_URL=mongodb://mongodb:27017/patients
 
     doctors:
         build: doctors/
