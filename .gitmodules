@@ -7,3 +7,6 @@
 [submodule "front"]
 	path = front
 	url = git@github.com:MuhammadOrabi/assesment-task-front.git
+[submodule "patients"]
+	path = patients
+	url = https://github.com/MuhammadOrabi/assesment-task-patients
